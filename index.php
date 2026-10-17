@@ -1,35 +1,53 @@
 <?php
 
-$entrada = "0101010";
+$fita = str_split("_" . "10101");
+$fita[] = "_";
 
-$fita = str_split($entrada);
+$cabecote = 1;
+$estado = "q0";
 
-$cabecote = 0;
+$transicoes = [
+    "q0" => [
+        "0" => ["0", "R", "q0"],
+        "1" => ["1", "R", "q0"],
+        "_" => ["_", "L", "q1"]
+    ],
 
-$length = count($fita);
+    "q1" => [
+        "0" => ["0", "L", "q2"],
+        "1" => ["1", "L", "q3"],
+        "_" => ["_", "L", "q1"]
+    ],
+    "q2" => [
+        "0" => ["0", "L", "q2"],
+        "1" => ["0", "L", "q2"],
+        "_" => ["0", "S", "qFim"]
+    ],
+    "q3" => [
+        "0" => ["1", "L", "q3"],
+        "1" => ["1", "L", "q3"],
+        "_" => ["1", "S", "qFim"]
+    ],
+];
+while ($estado !== "qFim") {
+    $simbolo = $fita[$cabecote];
 
-while ($cabecote != $length) {
-    echo $fita[$cabecote];
-    $cabecote++;
-}
+    $regra = $transicoes[$estado][$simbolo];
 
-echo " <br> Maquina escrevendo.. <br>";
+    $fita[$cabecote] = $regra[0];
 
-$fitaEscrita = [];
-
-foreach ($fita as $indice => $value) {
-    if ($fita[$indice] == 0) {
-        $value = 1;
-        array_push($fitaEscrita, $value);
-    } elseif ($fita[$indice] == 1) {
-        $value = 0;
-        array_push($fitaEscrita, $value);
+    if ($regra[1] === "R") {
+        $cabecote++;
+    } elseif ($regra[1] === "L") {
+        $cabecote--;
     }
+
+    $estado = $regra[2];
+
+    echo "Estado: $estado | <br>";
+    echo "Cabeçote: $cabecote | <br>";
+    echo "Fita: " . implode("", $fita) . PHP_EOL . "<br>";
 }
 
-$cabecote = 0;
-
-while ($cabecote != $length) {
-    echo $fitaEscrita[$cabecote];
-    $cabecote++;
-}
+echo PHP_EOL;
+echo "<br> Resultado final: " . implode("", $fita);
