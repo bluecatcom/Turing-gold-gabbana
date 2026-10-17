@@ -1,53 +1,66 @@
 <?php
 
-$fita = str_split("_" . "10101");
-$fita[] = "_";
+function copyAlgorithm($tape)
+{
+    $tape = str_split("_" . $tape);
+    $tape[] = "_";
 
-$cabecote = 1;
-$estado = "q0";
+    $string = implode("", $tape);
+    echo "Tape:" . $string;
 
-$transicoes = [
-    "q0" => [
-        "0" => ["0", "R", "q0"],
-        "1" => ["1", "R", "q0"],
-        "_" => ["_", "L", "q1"]
-    ],
+    $steps = 0;
 
-    "q1" => [
-        "0" => ["0", "L", "q2"],
-        "1" => ["1", "L", "q3"],
-        "_" => ["_", "L", "q1"]
-    ],
-    "q2" => [
-        "0" => ["0", "L", "q2"],
-        "1" => ["0", "L", "q2"],
-        "_" => ["0", "S", "qFim"]
-    ],
-    "q3" => [
-        "0" => ["1", "L", "q3"],
-        "1" => ["1", "L", "q3"],
-        "_" => ["1", "S", "qFim"]
-    ],
-];
-while ($estado !== "qFim") {
-    $simbolo = $fita[$cabecote];
+    $head = 1;
+    $state = "q0";
 
-    $regra = $transicoes[$estado][$simbolo];
+    $transition = [
+        "q0" => [
+            "0" => ["0", "R", "q0"],
+            "1" => ["1", "R", "q0"],
+            "_" => ["_", "L", "q1"]
+        ],
 
-    $fita[$cabecote] = $regra[0];
+        "q1" => [
+            "0" => ["0", "L", "q2"],
+            "1" => ["1", "L", "q3"],
+            "_" => ["_", "L", "q1"]
+        ],
+        "q2" => [
+            "0" => ["0", "L", "q2"],
+            "1" => ["0", "L", "q2"],
+            "_" => ["_", "S", "qEnd"]
+        ],
+        "q3" => [
+            "0" => ["1", "L", "q3"],
+            "1" => ["1", "L", "q3"],
+            "_" => ["_", "S", "qEnd"]
+        ],
+    ];
+    while ($state !== "qEnd") {
+        $symbol = $tape[$head];
 
-    if ($regra[1] === "R") {
-        $cabecote++;
-    } elseif ($regra[1] === "L") {
-        $cabecote--;
+        $rule = $transition[$state][$symbol];
+
+        $tape[$head] = $rule[0];
+
+        if ($rule[1] === "R") {
+            $head++;
+        } elseif ($rule[1] === "L") {
+            $head--;
+        }
+
+        $state = $rule[2];
+
+        $steps += 1;
     }
 
-    $estado = $regra[2];
-
-    echo "Estado: $estado | <br>";
-    echo "Cabeçote: $cabecote | <br>";
-    echo "Fita: " . implode("", $fita) . PHP_EOL . "<br>";
+    echo PHP_EOL;
+    echo "<br> output: " . implode("", $tape);
+    echo "<br> steps: " . $steps;
+    echo "<br> ========================== <br>";
 }
 
-echo PHP_EOL;
-echo "<br> Resultado final: " . implode("", $fita);
+copyAlgorithm(101010);
+copyAlgorithm(101011);
+copyAlgorithm(111110);
+copyAlgorithm(11_110);

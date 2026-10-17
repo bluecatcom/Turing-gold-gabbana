@@ -1,42 +1,45 @@
 <?php
 
-$fita = str_split("10101");
-$fita[] = "_";
+function FunctionName($tape)
+{
+    $tape = str_split($tape);
+    $tape[] = "_";
 
-$cabecote = 0;
-$estado = "q0";
+    $steps = 0;
 
-$transicoes = [
-    "q0" => [
-        "0" => ["0", "R", "q0"],
-        "1" => ["1", "R", "q0"],
-        "_" => ["_", "L", "q1"]
-    ],
+    $head = 0;
+    $state = "q0";
 
-    "q1" => [
-        "0" => ["0", "S", "qFim"],
-        "1" => ["0", "S", "qFim"]
-    ]
-];
-while ($estado !== "qFim") {
-    $simbolo = $fita[$cabecote];
+    $transition = [
+        "q0" => [
+            "0" => ["0", "R", "q0"],
+            "1" => ["1", "R", "q0"],
+            "_" => ["_", "L", "q1"]
+        ],
 
-    $regra = $transicoes[$estado][$simbolo];
+        "q1" => [
+            "0" => ["0", "S", "qEnd"],
+            "1" => ["0", "S", "qEnd"]
+        ]
+    ];
+    while ($state !== "qEnd") {
+        $symbol = $tape[$head];
 
-    $fita[$cabecote] = $regra[0];
+        $rule = $transition[$state][$symbol];
 
-    if ($regra[1] === "R") {
-        $cabecote++;
-    } elseif ($regra[1] === "L") {
-        $cabecote--;
+        $tape[$head] = $rule[0];
+
+        if ($rule[1] === "R") {
+            $head++;
+        } elseif ($rule[1] === "L") {
+            $head--;
+        }
+
+        $state = $rule[2];
+
+        $steps += 1;
     }
 
-    $estado = $regra[2];
-
-    echo "Estado: $estado | <br>";
-    echo "Cabeçote: $cabecote | <br>";
-    echo "Fita: " . implode("", $fita) . PHP_EOL . "<br>";
+    echo PHP_EOL;
+    echo "<br> output: " . implode("", $tape);
 }
-
-echo PHP_EOL;
-echo "<br> Resultado final: " . implode("", $fita);
