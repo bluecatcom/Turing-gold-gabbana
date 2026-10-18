@@ -1,6 +1,7 @@
 # Turing-gold-gabbana
 
 ## Estructure:
+```
 .
 ├── algorithms
 │   └── Machines.php
@@ -9,3 +10,4 @@
 ├── src
 │   └── TuringMachine.php
 ├── README.md
+```
