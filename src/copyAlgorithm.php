@@ -28,15 +28,15 @@ function CopyFinal($fita)
         "q2" => [
             "0" => ["0", "L", "q2"],
             "1" => ["0", "L", "q2"],
-            "_" => ["_", "S", "qFim"]
+            "_" => ["_", "S", "qEnd"]
         ],
         "q3" => [
             "0" => ["1", "L", "q3"],
             "1" => ["1", "L", "q3"],
-            "_" => ["_", "S", "qFim"]
+            "_" => ["_", "S", "qEnd"]
         ],
     ];
-    while ($estado !== "qFim") {
+    while ($estado !== "qEnd") {
         $simbolo = $fita[$cabecote];
 
         $regra = $transicoes[$estado][$simbolo];
