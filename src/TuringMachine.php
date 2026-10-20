@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace TuringMachine;
-
-final class TuringMachine
+final class MaquinaTuring
 {
     private array $fita = [];
     private int $cabecote;
@@ -20,12 +18,12 @@ final class TuringMachine
     public function __construct(string $entrada, array $config, int $limite = 1000)
     {
         if ($limite < 1 || $limite > 100000) {
-            throw new InvalidArgumentException('Limite de passos inválido.');
+            throw new InvalidArgumentException('Invalid step limit.');
         }
         $alfabeto = $config['alfabetoEntrada'] ?? ['0', '1'];
         foreach (str_split($entrada) as $simbolo) {
             if (!in_array($simbolo, $alfabeto, true)) {
-                throw new InvalidArgumentException("Símbolo inválido na entrada: {$simbolo}");
+                throw new InvalidArgumentException("Invalid symbol on input: {$simbolo}");
             }
         }
         $this->transicoes = $config['transicoes'];
@@ -59,20 +57,20 @@ final class TuringMachine
         }
         if ($this->passos >= $this->limite) {
             $this->status = 'limite';
-            $this->mensagem = 'Limite de passos atingido. A máquina pode não terminar.';
+            $this->mensagem = 'Reached max steps limit. The machine maybe not able to end.';
             return $this->obterEstado();
         }
         $simbolo = $this->ler($this->cabecote);
         $regra = $this->transicoes[$this->estado][$simbolo] ?? null;
         if (!is_array($regra) || count($regra) !== 3) {
             $this->status = 'erro';
-            $this->mensagem = "Transição inexistente em {$this->estado} lendo '{$simbolo}'.";
+            $this->mensagem = "Transition non-existent on {$this->estado} reading '{$simbolo}'.";
             return $this->obterEstado();
         }
         [$escrever, $mover, $proximo] = array_values($regra);
         if (!is_string($escrever) || strlen($escrever) !== 1 || !in_array($mover, ['L', 'R', 'S'], true) || !is_string($proximo)) {
             $this->status = 'erro';
-            $this->mensagem = 'Transição malformada.';
+            $this->mensagem = 'Transition malformed.';
             return $this->obterEstado();
         }
         $anterior = $this->estado;
