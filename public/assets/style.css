@@ -1,0 +1,45 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  background: #0b1020;
+  color: #eef2ff;
+}
+
+.fita {
+  display: flex;
+  overflow-x: auto;
+  gap: 4px;
+  padding: 25px 2px 10px;
+  min-height: 102px;
+}
+
+.celula {
+  flex: 0 0 56px;
+  text-align: center;
+}
+
+.simbolo {
+  border: 1px solid #405472;
+  border-radius: 8px;
+  background: #0c1426;
+  padding: 14px 4px;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.celula.ativa .simbolo {
+  border: 2px solid #60a5fa;
+  background: #18345a;
+}
+
+.indice {
+  color: #94a3b8;
+  font-size: .75rem;
+  margin-top: 5px;
+}
+
+.ponteiro {
+  color: #93c5fd;
+  font-size: .8rem;
+  height: 15px;
+}

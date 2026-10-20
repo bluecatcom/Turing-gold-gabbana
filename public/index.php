@@ -1,66 +1,106 @@
 <?php
+$maquinas = require __DIR__ . '/../algorithms/Machines.php';
+?>
 
-function copyAlgorithm($tape)
-{
-    $tape = str_split("_" . $tape);
-    $tape[] = "_";
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de Máquina de Turing</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
 
-    $string = implode("", $tape);
-    echo "Tape:" . $string;
+<main>
 
-    $steps = 0;
+  <header>
+    <h1>Turing Machine</h1>
+    <p>Choose an algorithm, provide input, and track each machine transition.</p>
+  </header>
 
-    $head = 1;
-    $state = "q0";
+  <section>
+    <label>
+      Algorithm
+      <select id="algoritmo">
+        <?php foreach ($maquinas as $id => $config): ?>
+          <option 
+            value="<?= htmlspecialchars($id, ENT_QUOTES) ?>" 
+            data-exemplo="<?= htmlspecialchars($config['exemplo'], ENT_QUOTES) ?>" 
+            data-descricao="<?= htmlspecialchars($config['descricao'], ENT_QUOTES) ?>">
+            <?= htmlspecialchars($config['nome']) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </label>
 
-    $transition = [
-        "q0" => [
-            "0" => ["0", "R", "q0"],
-            "1" => ["1", "R", "q0"],
-            "_" => ["_", "L", "q1"]
-        ],
+    <label>
+      Input
+      <input id="entrada" type="text" maxlength="200" value="111" spellcheck="false" autocomplete="off">
+    </label>
 
-        "q1" => [
-            "0" => ["0", "L", "q2"],
-            "1" => ["1", "L", "q3"],
-            "_" => ["_", "L", "q1"]
-        ],
-        "q2" => [
-            "0" => ["0", "L", "q2"],
-            "1" => ["0", "L", "q2"],
-            "_" => ["_", "S", "qEnd"]
-        ],
-        "q3" => [
-            "0" => ["1", "L", "q3"],
-            "1" => ["1", "L", "q3"],
-            "_" => ["_", "S", "qEnd"]
-        ],
-    ];
-    while ($state !== "qEnd") {
-        $symbol = $tape[$head];
+    <p id="descricao"></p>
 
-        $rule = $transition[$state][$symbol];
+    <div>
+      <button id="iniciar">Start / Restart</button>
+      <button id="passo">Execute step</button>
+      <button id="executar">Execute up to 100 step</button>
+    </div>
+  </section>
 
-        $tape[$head] = $rule[0];
+  <section>
+    <div>
+      <h2>Tape</h2>
+      <span id="status" class="status">Waiting</span>
+    </div>
+    <div id="fita" class="fita" aria-label="Fita da máquina"></div>
+  </section>
 
-        if ($rule[1] === "R") {
-            $head++;
-        } elseif ($rule[1] === "L") {
-            $head--;
-        }
+  <section>
+    <div>
+      <small>Current State</small>
+      <strong id="estado">—</strong>
+    </div>
+    <div>
+      <small>Head position</small>
+      <strong id="cabecote">—</strong>
+    </div>
+    <div>
+      <small>Steps taken</small>
+      <strong id="passos">0</strong>
+    </div>
+  </section>
 
-        $state = $rule[2];
+  <section>
+    <h2>Output</h2>
+    <pre id="resultado">Start a Machine.</pre>
+    <p id="mensagem" role="status"></p>
+  </section>
 
-        $steps += 1;
-    }
-
-    echo PHP_EOL;
-    echo "<br> output: " . implode("", $tape);
-    echo "<br> steps: " . $steps;
-    echo "<br> ========================== <br>";
-}
-
-copyAlgorithm(101010);
-copyAlgorithm(101011);
-copyAlgorithm(111110);
-copyAlgorithm(11_110);
+  <section>
+    <h2>Transition history</h2>
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>step</th>
+            <th>state</th>
+            <th>position</th>
+            <th>read</th>
+            <th>write</th>
+            <th>move</th>
+            <th>next</th>
+          </tr>
+        </thead>
+        <tbody id="historico">
+          <tr>
+            <td colspan="7">None transition taken</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script src="assets/app.js"></script>
+</body>
+</html>
